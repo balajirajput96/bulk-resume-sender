@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -50,13 +50,19 @@ export default function Home() {
   // Selected campaign detail modal
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
 
-  // Queries
+  // Queries with auto-polling for campaign status updates
   const { data: googleStatus, refetch: refetchGoogle } = trpc.google.status.useQuery(undefined, { enabled: isAuthenticated });
   const { data: resumes = [], refetch: refetchResumes } = trpc.resumes.list.useQuery(undefined, { enabled: isAuthenticated });
-  const { data: campaigns = [], refetch: refetchCampaigns } = trpc.campaigns.list.useQuery(undefined, { enabled: isAuthenticated });
+  const { data: campaigns = [], refetch: refetchCampaigns } = trpc.campaigns.list.useQuery(undefined, { 
+    enabled: isAuthenticated,
+    refetchInterval: 5000, // Poll every 5s for real-time campaign status
+  });
   const { data: campaignDetail } = trpc.campaigns.getDetail.useQuery(
     { id: selectedCampaignId! },
-    { enabled: !!selectedCampaignId }
+    { 
+      enabled: !!selectedCampaignId,
+      refetchInterval: 3000, // Poll detail logs when open
+    }
   );
 
   // Mutations
@@ -123,6 +129,11 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (!file.name.endsWith('.pdf') && !file.name.endsWith('.docx')) {
+      toast.error("Only PDF and DOCX resume formats are supported.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = (reader.result as string).split(',')[1];
@@ -146,7 +157,6 @@ export default function Home() {
       return;
     }
 
-    // Parse recipients (comma or newline separated)
     const recipientList = recipientsText
       .split(/[\n,]/)
       .map(e => e.trim())
@@ -259,7 +269,6 @@ export default function Home() {
           {/* TAB 1: COMPOSE & SEND */}
           <TabsContent value="compose" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left 2 Cols: Message & Recipients */}
               <div className="lg:col-span-2 space-y-6">
                 <Card className="bg-slate-900/80 border-slate-800 shadow-xl">
                   <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -338,7 +347,6 @@ export default function Home() {
                 </Card>
               </div>
 
-              {/* Right Col: Resume Selection & Sending Options */}
               <div className="space-y-6">
                 <Card className="bg-slate-900/80 border-slate-800 shadow-xl">
                   <CardHeader>
@@ -507,8 +515,8 @@ export default function Home() {
             <Card className="bg-slate-900/80 border-slate-800 shadow-xl">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">Campaign History & Logs</CardTitle>
-                  <CardDescription className="text-slate-400">Track delivery status and recipient performance</CardDescription>
+                  <CardTitle className="text-lg">Campaign History & Live Logs</CardTitle>
+                  <CardDescription className="text-slate-400">Track real-time delivery status and recipient performance</CardDescription>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => refetchCampaigns()} className="border-slate-800 text-slate-300">
                   <RefreshCw className="w-3.5 h-3.5 mr-2" />
@@ -556,7 +564,7 @@ export default function Home() {
                             onClick={() => setSelectedCampaignId(camp.id)}
                             className="border-indigo-500/40 text-indigo-400 hover:bg-indigo-500/10"
                           >
-                            View Logs
+                            Live Logs
                           </Button>
                         </div>
                       </div>
@@ -679,7 +687,7 @@ export default function Home() {
       <Dialog open={!!selectedCampaignId} onOpenChange={() => setSelectedCampaignId(null)}>
         <DialogContent className="bg-slate-900 border-slate-800 text-white sm:max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-lg">Campaign Delivery Logs</DialogTitle>
+            <DialogTitle className="text-lg">Campaign Delivery Live Logs</DialogTitle>
           </DialogHeader>
           {campaignDetail && (
             <div className="space-y-4 py-2">

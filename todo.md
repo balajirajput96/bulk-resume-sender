@@ -11,3 +11,8 @@
 - [x] Build AI Email Assistant Widget
 - [x] Build Campaign History & Real-time Status Log UI
 - [x] Write Unit Tests for core email and campaign services
+- [ ] Implement robust Google OAuth 2.0 authorization URL & redirect callback flow for Gmail API
+- [ ] Implement server-side PDF/DOCX file type validation and S3 cleanup on delete
+- [ ] Implement Manus Heartbeat SDK integration for reliable background campaign scheduling
+- [ ] Add live polling / auto-refresh in campaign history and logs view
+- [ ] Write comprehensive unit tests for email sending, S3 storage, and cron execution
