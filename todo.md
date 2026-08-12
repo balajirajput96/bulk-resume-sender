@@ -1,0 +1,23 @@
+# Project TODO - Bulk Resume & Email Sender Pro
+
+- [x] Initialize Database Schema (drizzle/schema.ts) for Campaigns, Recipients, Resumes, and Email Templates
+- [ ] Implement Server-side S3 Resume Storage & Management helpers
+- [ ] Implement Google OAuth / Gmail API integration helper (sendEmail via Gmail API, OAuth tokens storage)
+- [ ] Implement LLM Email Generation and Personalization API endpoint
+- [ ] Implement Cron / Heartbeat Job Runner for scheduled bulk email campaigns
+- [ ] Build Frontend Dashboard Layout and Navigation
+- [ ] Build Campaign Compose & Recipient Management UI
+- [ ] Build Resume Uploader & File Management UI
+- [ ] Build AI Email Assistant Widget
+- [ ] Build Campaign History & Real-time Status Log UI
+- [ ] Write Unit Tests for core email and campaign services
+- [x] Implement Server-side S3 Resume Storage & Management helpers
+- [x] Implement Google OAuth / Gmail API integration helper (sendEmail via Gmail API, OAuth tokens storage)
+- [x] Implement LLM Email Generation and Personalization API endpoint
+- [x] Implement Cron / Heartbeat Job Runner for scheduled bulk email campaigns
+- [x] Build Frontend Dashboard Layout and Navigation
+- [x] Build Campaign Compose & Recipient Management UI
+- [x] Build Resume Uploader & File Management UI
+- [x] Build AI Email Assistant Widget
+- [x] Build Campaign History & Real-time Status Log UI
+- [x] Write Unit Tests for core email and campaign services
