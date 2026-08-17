@@ -1,182 +1,115 @@
+import { randomUUID } from "node:crypto";
+import { and, eq } from "drizzle-orm";
+import { campaignRecipients, campaigns, resumes, users } from "../drizzle/schema";
 import { getDb } from "./db";
-import { googleTokens, campaigns, campaignRecipients, resumes, users } from "../drizzle/schema";
-import { eq, and } from "drizzle-orm";
-import { storageGet } from "./storage";
-import axios from "axios";
+import { getGmailAccessToken } from "./googleOAuth";
+import { storageGetSignedUrl } from "./storage";
 
-/**
- * Refresh Google OAuth access token using refresh token if expired
- */
-async function getValidAccessToken(userId: number): Promise<string> {
+const SEND_DELAY_MS = 250;
+
+const pause = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
+
+async function getAttachmentPart(userId: number, resumeId: number | null | undefined, boundary: string): Promise<string> {
+  if (!resumeId) return "";
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  const resume = (await db.select().from(resumes).where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId))).limit(1))[0];
+  if (!resume) throw new Error("The selected resume is no longer available.");
 
-  const tokenRes = await db.select().from(googleTokens).where(eq(googleTokens.userId, userId)).limit(1);
-  if (tokenRes.length === 0) {
-    throw new Error("Google account not connected. Please link your Google account first.");
-  }
+  const signedUrl = await storageGetSignedUrl(resume.fileKey);
+  const response = await fetch(signedUrl);
+  if (!response.ok) throw new Error("Unable to load the selected resume attachment.");
+  const base64Data = Buffer.from(await response.arrayBuffer()).toString("base64");
+  const mimeType = resume.filename.toLowerCase().endsWith(".pdf")
+    ? "application/pdf"
+    : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-  const tokenRecord = tokenRes[0];
-  
-  // If we have a refresh token and client credentials, we could refresh. 
-  // For sandbox and standard mock/real tokens, return access token directly or handle refresh.
-  return tokenRecord.accessToken;
+  return [
+    `--${boundary}`,
+    `Content-Type: ${mimeType}; name="${resume.filename}"`,
+    `Content-Disposition: attachment; filename="${resume.filename}"`,
+    "Content-Transfer-Encoding: base64",
+    "",
+    base64Data,
+  ].join("\r\n");
 }
 
-/**
- * Send an email via Gmail API using OAuth access token with optional resume attachment
- */
 export async function sendEmailViaGmail(userId: number, to: string, subject: string, htmlBody: string, resumeId?: number | null) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
+  const accessToken = await getGmailAccessToken(userId);
+  const boundary = `campaign_${randomUUID().replaceAll("-", "")}`;
+  const attachmentPart = await getAttachmentPart(userId, resumeId, boundary);
+  const messageLines = attachmentPart
+    ? [
+        `To: ${to}`,
+        `Subject: =?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`,
+        "MIME-Version: 1.0",
+        `Content-Type: multipart/mixed; boundary="${boundary}"`,
+        "",
+        `--${boundary}`,
+        "Content-Type: text/html; charset=UTF-8",
+        "Content-Transfer-Encoding: 8bit",
+        "",
+        htmlBody,
+        attachmentPart,
+        `--${boundary}--`,
+      ]
+    : [
+        `To: ${to}`,
+        `Subject: =?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`,
+        "MIME-Version: 1.0",
+        "Content-Type: text/html; charset=UTF-8",
+        "Content-Transfer-Encoding: 8bit",
+        "",
+        htmlBody,
+      ];
+  const raw = Buffer.from(messageLines.join("\r\n")).toString("base64url");
 
-  const accessToken = await getValidAccessToken(userId);
-
-  // Fetch resume attachment if resumeId is provided
-  let attachmentPart = "";
-  let boundary = "foo_bar_baz";
-
-  if (resumeId) {
-    const resumeRes = await db.select().from(resumes).where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId))).limit(1);
-    if (resumeRes.length > 0) {
-      const resume = resumeRes[0];
-      try {
-        const fileData = await storageGet(resume.fileKey);
-        if (fileData && fileData.url) {
-          const fileResp = await axios.get(fileData.url, { responseType: 'arraybuffer' });
-          const base64Data = Buffer.from(fileResp.data).toString('base64');
-          const mimeType = resume.filename.endsWith('.pdf') ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-
-          attachmentPart = `\r\n--${boundary}\r\n` +
-            `Content-Type: ${mimeType}; name="${resume.filename}"\r\n` +
-            `Content-Disposition: attachment; filename="${resume.filename}"\r\n` +
-            `Content-Transfer-Encoding: base64\r\n\r\n` +
-            `${base64Data}\r\n`;
-        }
-      } catch (err) {
-        console.error("[Gmail] Failed to fetch resume attachment for email:", err);
-      }
-    }
-  }
-
-  const hasAttachment = attachmentPart.length > 0;
-  
-  let rawMessage = "";
-  if (hasAttachment) {
-    rawMessage = [
-      `To: ${to}`,
-      `Subject: =?UTF-8?B?${Buffer.from(subject).toString('base64')}?=`,
-      `MIME-Version: 1.0`,
-      `Content-Type: multipart/mixed; boundary="${boundary}"`,
-      ``,
-      `--${boundary}`,
-      `Content-Type: text/html; charset=UTF-8`,
-      `Content-Transfer-Encoding: 7bit`,
-      ``,
-      htmlBody,
-      attachmentPart,
-      `--${boundary}--`
-    ].join("\r\n");
-  } else {
-    rawMessage = [
-      `To: ${to}`,
-      `Subject: =?UTF-8?B?${Buffer.from(subject).toString('base64')}?=`,
-      `MIME-Version: 1.0`,
-      `Content-Type: text/html; charset=UTF-8`,
-      ``,
-      htmlBody
-    ].join("\r\n");
-  }
-
-  const encodedMessage = Buffer.from(rawMessage)
-    .toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-
-  try {
-    const response = await axios.post(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages/send`,
-      { raw: encodedMessage },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return { success: true, messageId: response.data.id };
-  } catch (error: any) {
-    console.error("[Gmail API Error]", error.response?.data || error.message);
-    throw new Error(error.response?.data?.error?.message || error.message || "Failed to send email via Gmail API");
-  }
+  const response = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+    method: "POST",
+    headers: { authorization: `Bearer ${accessToken}`, "content-type": "application/json" },
+    body: JSON.stringify({ raw }),
+  });
+  const data = (await response.json().catch(() => ({}))) as { id?: string; error?: { message?: string } };
+  if (!response.ok || !data.id) throw new Error(data.error?.message || "Gmail could not send this message.");
+  return { success: true, messageId: data.id };
 }
 
-/**
- * Execute a campaign by sending emails to all pending recipients
- */
 export async function executeCampaign(campaignId: number) {
   const db = await getDb();
-  if (!db) return;
+  if (!db) throw new Error("Database not available");
+  const campaign = (await db.select().from(campaigns).where(eq(campaigns.id, campaignId)).limit(1))[0];
+  if (!campaign || campaign.status === "completed" || campaign.status === "failed") return;
 
-  const campaignRes = await db.select().from(campaigns).where(eq(campaigns.id, campaignId)).limit(1);
-  if (campaignRes.length === 0) return;
-  const campaign = campaignRes[0];
-
-  await db.update(campaigns).set({ status: 'sending' }).where(eq(campaigns.id, campaignId));
-
-  const recipients = await db.select().from(campaignRecipients).where(
-    and(eq(campaignRecipients.campaignId, campaignId), eq(campaignRecipients.status, 'pending'))
-  );
-
+  await db.update(campaigns).set({ status: "sending" }).where(eq(campaigns.id, campaignId));
+  const recipients = await db.select().from(campaignRecipients).where(and(eq(campaignRecipients.campaignId, campaignId), eq(campaignRecipients.status, "pending")));
   let sentCount = campaign.sentCount;
   let failedCount = campaign.failedCount;
 
   for (const recipient of recipients) {
     try {
-      let personalizedBody = campaign.bodyTemplate
+      const body = campaign.bodyTemplate
         .replace(/{{email}}/g, recipient.email)
-        .replace(/{{name}}/g, recipient.email.split('@')[0]);
-
-      await sendEmailViaGmail(campaign.userId, recipient.email, campaign.subject, personalizedBody, campaign.resumeId);
-
-      await db.update(campaignRecipients)
-        .set({ status: 'sent', sentAt: new Date(), errorMessage: null })
-        .where(eq(campaignRecipients.id, recipient.id));
-
-      sentCount++;
-    } catch (err: any) {
-      await db.update(campaignRecipients)
-        .set({ status: 'failed', errorMessage: err.message || 'Unknown error' })
-        .where(eq(campaignRecipients.id, recipient.id));
-
-      failedCount++;
+        .replace(/{{name}}/g, recipient.email.split("@")[0]);
+      await sendEmailViaGmail(campaign.userId, recipient.email, campaign.subject, body, campaign.resumeId);
+      await db.update(campaignRecipients).set({ status: "sent", sentAt: new Date(), errorMessage: null }).where(eq(campaignRecipients.id, recipient.id));
+      sentCount += 1;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown Gmail delivery failure";
+      await db.update(campaignRecipients).set({ status: "failed", errorMessage: message }).where(eq(campaignRecipients.id, recipient.id));
+      failedCount += 1;
     }
-
-    await db.update(campaigns)
-      .set({ sentCount, failedCount })
-      .where(eq(campaigns.id, campaignId));
+    await db.update(campaigns).set({ sentCount, failedCount }).where(eq(campaigns.id, campaignId));
+    if (recipients.indexOf(recipient) < recipients.length - 1) await pause(SEND_DELAY_MS);
   }
 
-  await db.update(campaigns).set({ status: 'completed', updatedAt: new Date() }).where(eq(campaigns.id, campaignId));
-
+  await db.update(campaigns).set({ status: "completed", updatedAt: new Date() }).where(eq(campaigns.id, campaignId));
   try {
-    const ownerRes = await db.select().from(users).where(eq(users.id, campaign.userId)).limit(1);
-    if (ownerRes.length > 0 && ownerRes[0].email) {
-      await sendEmailViaGmail(
-        campaign.userId,
-        ownerRes[0].email,
-        `Campaign Summary: "${campaign.title}" Completed`,
-        `<h3>Campaign Execution Completed</h3>
-         <p><b>Campaign:</b> ${campaign.title}</p>
-         <p><b>Total Recipients:</b> ${campaign.totalRecipients}</p>
-         <p><b>Successfully Sent:</b> ${sentCount}</p>
-         <p><b>Failures:</b> ${failedCount}</p>
-         <p>Check your dashboard for detailed recipient delivery logs.</p>`,
-        null
-      );
+    const owner = (await db.select().from(users).where(eq(users.id, campaign.userId)).limit(1))[0];
+    if (owner?.email) {
+      await sendEmailViaGmail(campaign.userId, owner.email, `Campaign summary: ${campaign.title}`,
+        `<h3>Campaign completed</h3><p><strong>Recipients:</strong> ${campaign.totalRecipients}</p><p><strong>Sent:</strong> ${sentCount}</p><p><strong>Failed:</strong> ${failedCount}</p>`, null);
     }
-  } catch (notifErr) {
-    console.error("[Campaign Notification Error]", notifErr);
+  } catch (error) {
+    console.error("[Campaign notification]", error);
   }
 }

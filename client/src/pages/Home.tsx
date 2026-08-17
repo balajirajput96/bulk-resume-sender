@@ -42,10 +42,8 @@ export default function Home() {
   const [keyPoints, setKeyPoints] = useState("5+ years experience in React, Node.js, Cloud architecture");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Google OAuth Link Modal
+  // Google consent dialog
   const [googleModalOpen, setGoogleModalOpen] = useState(false);
-  const [mockGoogleEmail, setMockGoogleEmail] = useState("myemail@gmail.com");
-  const [mockAccessToken, setMockAccessToken] = useState("mock_oauth_token_12345");
 
   // Selected campaign detail modal
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
@@ -65,16 +63,19 @@ export default function Home() {
     }
   );
 
-  // Mutations
-  const connectGoogleMutation = trpc.google.connect.useMutation({
-    onSuccess: () => {
-      toast.success("Google account linked successfully via Gmail API!");
-      setGoogleModalOpen(false);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const gmailStatus = params.get("gmail");
+    const gmailError = params.get("google_error");
+    if (gmailStatus === "connected") {
+      toast.success("Gmail was connected securely. You can now create campaigns.");
       refetchGoogle();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+    }
+    if (gmailError) toast.error(gmailError);
+    if (gmailStatus || gmailError) window.history.replaceState({}, "", window.location.pathname);
+  }, [refetchGoogle]);
 
+  // Mutations
   const disconnectGoogleMutation = trpc.google.disconnect.useMutation({
     onSuccess: () => {
       toast.success("Google account unlinked");
@@ -144,6 +145,14 @@ export default function Home() {
       });
     };
     reader.readAsDataURL(file);
+  };
+
+  const startGoogleAuthorization = () => {
+    if (!googleStatus?.configured) {
+      toast.error("Gmail connection still needs the app's Google OAuth credentials. No email will be sent until that one-time setup is complete.");
+      return;
+    }
+    window.location.assign("/api/google/connect");
   };
 
   const handleSendCampaign = () => {
@@ -233,7 +242,7 @@ export default function Home() {
               className="border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 text-xs"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1.5" />
-              Connect Google Account
+              Connect Gmail
             </Button>
           )}
 
@@ -642,42 +651,32 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      {/* Google OAuth Link Dialog */}
+      {/* Google OAuth consent dialog */}
       <Dialog open={googleModalOpen} onOpenChange={setGoogleModalOpen}>
         <DialogContent className="bg-slate-900 border-slate-800 text-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-indigo-400" />
-              Connect Google Account via Gmail API
+              Connect Gmail securely
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <p className="text-xs text-slate-400 leading-relaxed">
-              Authorize your Gmail account to send bulk emails and resumes on your behalf. Enter your Google account details below to link via OAuth.
+              You will be redirected to Google to choose an account and grant only the Gmail sending permission. This app never asks for your Google password or a pasted access token.
             </p>
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-slate-300">Google Email Address</label>
-              <Input 
-                value={mockGoogleEmail} 
-                onChange={e => setMockGoogleEmail(e.target.value)} 
-                className="bg-slate-950 border-slate-800 text-white" 
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-slate-300">OAuth Access Token</label>
-              <Input 
-                value={mockAccessToken} 
-                onChange={e => setMockAccessToken(e.target.value)} 
-                className="bg-slate-950 border-slate-800 text-white" 
-              />
-            </div>
+            {!googleStatus?.configured && (
+              <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-200">
+                The app owner must add the Google OAuth Client ID and Client Secret before Gmail authorization can begin. The rest of the dashboard remains available.
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button 
-              onClick={() => connectGoogleMutation.mutate({ googleEmail: mockGoogleEmail, accessToken: mockAccessToken })}
+              onClick={startGoogleAuthorization}
+              disabled={!googleStatus?.configured}
               className="w-full bg-indigo-600 hover:bg-indigo-500 text-white"
             >
-              Authorize & Connect Gmail
+              Continue with Google
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -15,6 +15,13 @@
       "when": 1786497042134,
       "tag": "0001_overrated_rawhide_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1786974063824,
+      "tag": "0002_sturdy_kinsey_walden",
+      "breakpoints": true
     }
   ]
 }

@@ -1,8 +1,5 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, longtext } from "drizzle-orm/mysql-core";
+import { int, longtext, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
-/**
- * Core user table backing auth flow.
- */
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   openId: varchar("openId", { length: 64 }).notNull().unique(),
@@ -18,9 +15,6 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-/**
- * Stored resumes uploaded by users for attaching to emails
- */
 export const resumes = mysqlTable("resumes", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
@@ -34,9 +28,6 @@ export const resumes = mysqlTable("resumes", {
 export type Resume = typeof resumes.$inferSelect;
 export type InsertResume = typeof resumes.$inferInsert;
 
-/**
- * Email campaigns created by the user
- */
 export const campaigns = mysqlTable("campaigns", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
@@ -46,6 +37,8 @@ export const campaigns = mysqlTable("campaigns", {
   resumeId: int("resumeId"),
   status: mysqlEnum("status", ["draft", "scheduled", "sending", "completed", "failed"]).default("draft").notNull(),
   scheduledAt: timestamp("scheduledAt"),
+  /** The platform-issued task UID that owns a future one-time send. */
+  scheduleCronTaskUid: varchar("scheduleCronTaskUid", { length: 65 }).unique(),
   totalRecipients: int("totalRecipients").default(0).notNull(),
   sentCount: int("sentCount").default(0).notNull(),
   failedCount: int("failedCount").default(0).notNull(),
@@ -56,9 +49,6 @@ export const campaigns = mysqlTable("campaigns", {
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = typeof campaigns.$inferInsert;
 
-/**
- * Recipients per campaign and their delivery status
- */
 export const campaignRecipients = mysqlTable("campaign_recipients", {
   id: int("id").autoincrement().primaryKey(),
   campaignId: int("campaignId").notNull(),
@@ -71,9 +61,7 @@ export const campaignRecipients = mysqlTable("campaign_recipients", {
 export type CampaignRecipient = typeof campaignRecipients.$inferSelect;
 export type InsertCampaignRecipient = typeof campaignRecipients.$inferInsert;
 
-/**
- * Gmail OAuth token storage for connected Google accounts
- */
+/** OAuth tokens are encrypted by the application before persistence. */
 export const googleTokens = mysqlTable("google_tokens", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull().unique(),

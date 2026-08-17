@@ -17,3 +17,9 @@
 - [x] Add live polling / auto-refresh in campaign history and logs view
 - [x] Write comprehensive unit tests for email sending, S3 storage, and cron execution
 - [x] Publish the validated source code to a private GitHub repository
+- [ ] Configure real Google OAuth credentials and verified consent screen for Gmail sending
+- [ ] Create and configure Google Cloud OAuth credentials through the available Google session
+- [x] Replace manual token entry with secure Google authorization redirect and callback
+- [x] Add delivery safeguards, sending limits, and campaign error recovery
+- [ ] Verify the end-to-end live Gmail connection and synchronize final changes to GitHub
+- [x] Finalize AI-assisted drafting using the available configured API and document the one-time Gmail authorization requirement
