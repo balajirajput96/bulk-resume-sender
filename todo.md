@@ -21,5 +21,5 @@
 - [ ] Create and configure Google Cloud OAuth credentials through the available Google session
 - [x] Replace manual token entry with secure Google authorization redirect and callback
 - [x] Add delivery safeguards, sending limits, and campaign error recovery
-- [ ] Verify the end-to-end live Gmail connection and synchronize final changes to GitHub
+- [ ] Verify the end-to-end live Gmail connection after Google authorization; final changes are synchronized to GitHub
 - [x] Finalize AI-assisted drafting using the available configured API and document the one-time Gmail authorization requirement
