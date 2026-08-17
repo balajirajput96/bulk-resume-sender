@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
 import { createGoogleOAuthState, verifyGoogleOAuthState } from "./googleOAuth";
+import { ENV } from "./_core/env";
+
+const testCookieSecret = ENV.cookieSecret || "test-jwt-secret-for-oauth-state";
+if (!ENV.cookieSecret) {
+  ENV.cookieSecret = testCookieSecret;
+}
 
 describe("Bulk Resume Sender Comprehensive Tests", () => {
   it("signs and validates a short-lived Google OAuth state payload", () => {
