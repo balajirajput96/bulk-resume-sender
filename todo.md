@@ -16,4 +16,4 @@
 - [x] Implement Manus Heartbeat SDK integration for reliable background campaign scheduling
 - [x] Add live polling / auto-refresh in campaign history and logs view
 - [x] Write comprehensive unit tests for email sending, S3 storage, and cron execution
-- [ ] Publish the validated source code to a private GitHub repository
+- [x] Publish the validated source code to a private GitHub repository
