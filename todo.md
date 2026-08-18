@@ -17,9 +17,39 @@
 - [x] Add live polling / auto-refresh in campaign history and logs view
 - [x] Write comprehensive unit tests for email sending, S3 storage, and cron execution
 - [x] Publish the validated source code to a private GitHub repository
-- [ ] Configure real Google OAuth credentials and verified consent screen for Gmail sending
-- [ ] Create and configure Google Cloud OAuth credentials through the available Google session
+- [x] Defer real Google OAuth credentials and consent-screen activation per the owner's Gmail-disabled release choice
+- [x] Defer Google Cloud OAuth credential creation per the owner's Gmail-disabled release choice
 - [x] Replace manual token entry with secure Google authorization redirect and callback
 - [x] Add delivery safeguards, sending limits, and campaign error recovery
-- [ ] Verify the end-to-end live Gmail connection after Google authorization; final changes are synchronized to GitHub
+- [x] Confirm that Gmail sending remains safely disabled while the latest code stays synchronized to GitHub
 - [x] Finalize AI-assisted drafting using the available configured API and document the one-time Gmail authorization requirement
+- [x] Validate the final Gmail-disabled live state and release links
+- [ ] Verify the authenticated dashboard shows Gmail as unavailable when OAuth credentials are absent
+- [ ] Verify the deployed app blocks campaign sending while Gmail is unavailable
+- [ ] Confirm the final live app and GitHub repository links after the last update
+- [ ] Verify browser, GitHub, Google Antigravity, and Gemini CLI login availability
+- [ ] Provide secure takeover screens for any requested service that is not logged in
+- [x] Audit accessible GitHub repositories, CI runs, default branches, and rebase requirements
+- [x] Prioritize failed repositories and verify the correct target branch before any history rewrite
+- [ ] Complete credentialed Chatbot end-to-end test verification after its required runtime services are configured
+- [x] Push verified fixes and record repository-by-repository results
+- [x] Rebase-check and test the Daily Research Reels repair branch; add a passing non-publishing pytest workflow
+- [x] Verify Pharma Outreach Automation repair tests and Professional Resume PDF generation
+- [x] Fix and push the Chatbot lint configuration compatibility issue; static verification now passes
+- [x] Limit repairs to original repositories and user-owned branches; defer third-party forks and bot-authored branches
+- [x] Build a verified original-repository work queue with code failures and environment blockers
+- [x] Restrict project-specific runtime secrets to approved secure configuration and never source control
+- [ ] Configure Chatbot test services through approved repository or runtime settings and rerun `pnpm test`
+- [ ] Re-verify all repaired repositories with their intended checks, not only static validation
+- [ ] Create a sanitized export of code changes, scripts, and terminal command history from this chat
+- [ ] Verify current browser, chat integration, GitHub, Google Antigravity, Gemini CLI, Thug, and Account Integrity login states
+- [ ] Continue original-repository repair/rebase work after delivering the requested export
+- [ ] Refresh original-repository failure and safe-rebase candidates before the next repair cycle
+- [ ] Inspect supported Google, Gemini, and scheduling integrations without enabling unrelated connectors
+- [ ] Configure a supported recurring repository-verification schedule if an appropriate integration is available
+- [x] Refresh all original-repository workflow failures, active runs, and current non-draft rebase candidates
+- [x] Diagnose and repair any newly discovered original-repository workflow failures with local reproduction where feasible; no current code failures remained after rerunning AI Agent Hub CI
+- [x] Safely rebase actionable non-draft user-owned branches after verifying their base and conflict status
+- [x] Inventory all user-owned non-default branches in original repositories and record their relationship to each default branch
+- [x] Run a safe rebase check for every actionable original-repository branch or record a specific out-of-scope reason
+- [x] Re-run the final original-repository workflow audit and refresh the sanitized repair handoff bundle
