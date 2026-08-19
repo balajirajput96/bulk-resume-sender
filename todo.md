@@ -24,11 +24,12 @@
 - [x] Confirm that Gmail sending remains safely disabled while the latest code stays synchronized to GitHub
 - [x] Finalize AI-assisted drafting using the available configured API and document the one-time Gmail authorization requirement
 - [x] Validate the final Gmail-disabled live state and release links
-- [ ] Verify the authenticated dashboard shows Gmail as unavailable when OAuth credentials are absent
-- [ ] Verify the deployed app blocks campaign sending while Gmail is unavailable
+- [ ] Verify the authenticated deployed dashboard shows Gmail as unavailable when OAuth credentials are absent; terminal-only source review confirms the intended rendering but not a live session outcome
+- [x] Verify campaign sending is blocked while Gmail is unavailable through the server guard and regression test
+- [x] Add a regression test proving campaign dispatch is blocked when Gmail OAuth is not configured
 - [x] Confirm the final live app and GitHub repository links after the last update
-- [ ] Verify actual browser login availability if the terminal-only constraint is lifted; browser-history access remains out of scope
-- [ ] Provide a supported takeover path only if terminal-only execution is lifted and a supported service requires it
+- [x] Supersede browser login verification under the explicit terminal-only constraint; browser-history access remains out of scope
+- [x] Supersede takeover-path work under the explicit terminal-only constraint; no unsupported takeover was attempted
 - [x] Audit accessible GitHub repositories, CI runs, default branches, and rebase requirements
 - [x] Prioritize failed repositories and verify the correct target branch before any history rewrite
 - [x] Complete Chatbot end-to-end test verification through explicit Playwright-only in-memory test services
@@ -42,7 +43,7 @@
 - [x] Configure self-contained Chatbot test-mode services and rerun `pnpm test`
 - [x] Re-verify repaired repositories with their intended checks, including Chatbot end-to-end and Atlas validation
 - [x] Create a sanitized export of code changes, scripts, and terminal command history from this chat
-- [ ] Verify actual browser and chat-integration login states if terminal-only execution is lifted; terminal-accessible GitHub and connector status has been recorded
+- [x] Supersede browser and chat-integration login verification under the explicit terminal-only constraint; terminal-accessible status has been recorded
 - [x] Continue original-repository repair/rebase work after delivering the requested export
 - [x] Refresh original-repository failure and safe-rebase candidates before the next repair cycle
 - [x] Inspect supported Google, Gemini, and scheduling integrations without enabling unrelated connectors
