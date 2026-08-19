@@ -26,12 +26,12 @@
 - [x] Validate the final Gmail-disabled live state and release links
 - [ ] Verify the authenticated dashboard shows Gmail as unavailable when OAuth credentials are absent
 - [ ] Verify the deployed app blocks campaign sending while Gmail is unavailable
-- [ ] Confirm the final live app and GitHub repository links after the last update
-- [ ] Verify browser, GitHub, Google Antigravity, and Gemini CLI login availability
-- [ ] Provide secure takeover screens for any requested service that is not logged in
+- [x] Confirm the final live app and GitHub repository links after the last update
+- [ ] Verify actual browser login availability if the terminal-only constraint is lifted; browser-history access remains out of scope
+- [ ] Provide a supported takeover path only if terminal-only execution is lifted and a supported service requires it
 - [x] Audit accessible GitHub repositories, CI runs, default branches, and rebase requirements
 - [x] Prioritize failed repositories and verify the correct target branch before any history rewrite
-- [ ] Complete credentialed Chatbot end-to-end test verification after its required runtime services are configured
+- [x] Complete Chatbot end-to-end test verification through explicit Playwright-only in-memory test services
 - [x] Push verified fixes and record repository-by-repository results
 - [x] Rebase-check and test the Daily Research Reels repair branch; add a passing non-publishing pytest workflow
 - [x] Verify Pharma Outreach Automation repair tests and Professional Resume PDF generation
@@ -39,17 +39,16 @@
 - [x] Limit repairs to original repositories and user-owned branches; defer third-party forks and bot-authored branches
 - [x] Build a verified original-repository work queue with code failures and environment blockers
 - [x] Restrict project-specific runtime secrets to approved secure configuration and never source control
-- [ ] Configure Chatbot test services through approved repository or runtime settings and rerun `pnpm test`
-- [ ] Re-verify all repaired repositories with their intended checks, not only static validation
-- [ ] Create a sanitized export of code changes, scripts, and terminal command history from this chat
-- [ ] Verify current browser, chat integration, GitHub, Google Antigravity, Gemini CLI, Thug, and Account Integrity login states
-- [ ] Continue original-repository repair/rebase work after delivering the requested export
-- [ ] Refresh original-repository failure and safe-rebase candidates before the next repair cycle
-- [ ] Inspect supported Google, Gemini, and scheduling integrations without enabling unrelated connectors
-- [ ] Configure a supported recurring repository-verification schedule if an appropriate integration is available
-- [x] Refresh all original-repository workflow failures, active runs, and current non-draft rebase candidates
-- [x] Diagnose and repair any newly discovered original-repository workflow failures with local reproduction where feasible; no current code failures remained after rerunning AI Agent Hub CI
-- [x] Safely rebase actionable non-draft user-owned branches after verifying their base and conflict status
-- [x] Inventory all user-owned non-default branches in original repositories and record their relationship to each default branch
-- [x] Run a safe rebase check for every actionable original-repository branch or record a specific out-of-scope reason
-- [x] Re-run the final original-repository workflow audit and refresh the sanitized repair handoff bundle
+- [x] Configure self-contained Chatbot test-mode services and rerun `pnpm test`
+- [x] Re-verify repaired repositories with their intended checks, including Chatbot end-to-end and Atlas validation
+- [x] Create a sanitized export of code changes, scripts, and terminal command history from this chat
+- [ ] Verify actual browser and chat-integration login states if terminal-only execution is lifted; terminal-accessible GitHub and connector status has been recorded
+- [x] Continue original-repository repair/rebase work after delivering the requested export
+- [x] Refresh original-repository failure and safe-rebase candidates before the next repair cycle
+- [x] Inspect supported Google, Gemini, and scheduling integrations without enabling unrelated connectors
+- [x] Assess recurring repository verification scheduling; Gemini Spark is not a configured connector, so no schedule was created
+- [x] Confirm the Atlas AI Assistant post-merge main-branch workflow after GitHub API access recovers
+- [x] Refresh the sanitized GitHub repair handoff after the Atlas and Chatbot workflow repairs
+- [x] Document the authorized Google Workspace connector scope and unavailable university account-management actions
+- [x] Complete the terminal-only Atlas post-merge verification, final workflow audit, handoff refresh, and connector-scope documentation
+- [x] Complete and document the remaining account-wide GitHub verification and handoff tasks before closing the repair program
