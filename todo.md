@@ -53,3 +53,9 @@
 - [x] Document the authorized Google Workspace connector scope and unavailable university account-management actions
 - [x] Complete the terminal-only Atlas post-merge verification, final workflow audit, handoff refresh, and connector-scope documentation
 - [x] Complete and document the remaining account-wide GitHub verification and handoff tasks before closing the repair program
+- [x] Refresh all original-repository workflow failures, active runs, and safe-rebase candidates for the new repair cycle
+- [x] Repair and verify any newly failed or cancelled original-repository workflows through local checks and GitHub Actions; the refreshed audit found no new terminal workflow failure
+- [x] Perform safe rebase checks for current user-owned original-repository branches
+- [x] Assess and configure one supported recurring repository-verification schedule; daily 09:00 Asia/Kolkata review is active
+- [x] Run a terminal-only final audit and refresh the sanitized GitHub repair handoff
+- [x] Create and verify the user-selected daily GitHub workflow audit and safe-repair review schedule
