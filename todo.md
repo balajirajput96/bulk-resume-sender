@@ -74,3 +74,5 @@
 
 - [x] Preserve the selected daily terminal-only repair review plus repository-level CI-on-change maintenance model without adding a broad account-wide secret
 - [x] Validate current CI coverage and maintenance-state consistency, then repair only newly verified failures
+
+- [x] Classify, safely rebase, and validate the eligible `health-reels-automation` `maintenance/daily-audit` branch; preserve unrelated histories and record the result
