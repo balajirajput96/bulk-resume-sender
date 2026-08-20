@@ -25,7 +25,8 @@
 - [x] Finalize AI-assisted drafting using the available configured API and document the one-time Gmail authorization requirement
 - [x] Validate the final Gmail-disabled live state and release links
 - [x] Verify the authenticated dashboard preview shows Gmail as unavailable/not linked when OAuth credentials are absent; the preview displays the Connect Gmail action
-- [ ] Perform a read-only authenticated check of the deployed dashboard and capture verifiable evidence that Gmail remains unavailable/not linked when OAuth credentials are absent
+- [ ] Perform a read-only authenticated check of the deployed dashboard and capture verifiable evidence that Gmail remains unavailable/not linked when OAuth credentials are absent, if a user-approved authenticated session becomes available
+- [x] Document the terminal-only equivalent evidence: the public deployment returned HTTP 200, the server status and dispatch guards were source-inspected, and all six regression tests passed; no authenticated browser session was used under the terminal-only constraint
 - [x] Verify campaign sending is blocked while Gmail is unavailable through the server guard and regression test
 - [x] Add a regression test proving campaign dispatch is blocked when Gmail OAuth is not configured
 - [x] Confirm the final live app and GitHub repository links after the last update
