@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "mission": "github-centered-engineering-maintenance",
+  "requestedCycleLimit": 2400,
+  "executionNumber": 2,
+  "lastVerifiedAt": "2026-08-20T20:02:00Z",
+  "status": "selected_maintenance_model_validated",
+  "safety": {
+    "credentialPolicy": "Credential values are never recorded, copied, committed, or emitted.",
+    "repositoryScope": "Only original user-owned repositories and account-authored branches are eligible for repair.",
+    "historyPolicy": "Terminal history is classified only by safe metadata and command categories; arguments and secret-bearing lines are not stored.",
+    "rewritePolicy": "Never force-rebase unrelated history, drafts, forks, or bot-authored branches."
+  },
+  "verifiedAccess": {
+    "github": {
+      "cli": "gh",
+      "account": "balajirajput96",
+      "status": "authenticated",
+      "capabilities": ["repository inspection", "workflow inspection", "safe push of validated user-owned changes"]
+    },
+    "localCli": {
+      "available": ["git", "gh"],
+      "unavailableAtAudit": ["gemini", "gcloud", "datadog", "jules", "antigravity"]
+    }
+  },
+  "automationAssets": {
+    "workflowAuditScript": "/home/ubuntu/github_original_workflow_audit.mjs",
+    "branchAuditScript": "/home/ubuntu/bulk-resume-sender/github_original_branch_audit.mjs",
+    "repairRecord": "/home/ubuntu/github-repair-progress.md",
+    "currentWorkflowAudit": "/home/ubuntu/github-original-workflow-audit-current.json",
+    "dailyReview": {
+      "name": "Daily GitHub repair review",
+      "status": "active",
+      "cron": "0 0 9 * * *",
+      "timezone": "Asia/Kolkata"
+    }
+  },
+  "repositoryState": {
+    "accessibleOriginalRepositories": 40,
+    "latestNonDependabotAudit": {
+      "failedOrCancelled": 0,
+      "active": 0
+    },
+    "localWorkingCopies": [
+      "bulk-resume-sender",
+      "B",
+      "ai-agent-hub",
+      "antigravity-pharma-dashboard",
+      "autonomous-ai-workspace",
+      "balaji-free-selfhost-n8n",
+      "balaji-professional-portfolio",
+      "gmail-resume-mailer",
+      "infra-tools",
+      "orbit-console",
+      "pharma-outreach-automation",
+      "professional-resume-balaji-rajput"
+    ]
+  },
+  "connectorScope": {
+    "relevantEnabledConnectors": ["GitHub", "Google Workspace", "Google Gemini", "Gmail", "Slack", "Google Ads", "Playwright", "Perplexity", "Grok", "OpenRouter", "Supabase"],
+    "policy": "Use a connector only when it is relevant to a verified maintenance action; no broad credential extraction or connector mutation is permitted."
+  },
+  "selectedMaintenanceModel": {
+    "name": "daily-repair-review-plus-repository-ci",
+    "selectedByUser": true,
+    "components": ["active daily terminal-only GitHub repair review", "repository CI on every push or pull request where an executable project exists"],
+    "excluded": ["hourly full-agent sessions", "new broad account-wide GitHub secret", "credential extraction from connectors"],
+    "rationale": "The model preserves the validated daily account-level review and avoids unsupported high-frequency agent polling while keeping code changes covered by repository CI."
+  },
+  "recentExecution": {
+    "outcome": "Validated and repaired two current workflow failures without adding credentials.",
+    "repairs": [
+      {
+        "repository": "automation-control-center",
+        "change": "Made first-run orphan state-branch initialization tolerant of an empty index and retained manual dispatch while removing the hourly trigger.",
+        "validationRun": "32411147636",
+        "result": "success"
+      },
+      {
+        "repository": "ai-agent-hub",
+        "change": "Added a non-secret CI-only database URL so Drizzle migration metadata validation can run without production credentials.",
+        "validationRun": "32411854368",
+        "result": "success"
+      }
+    ],
+    "workflowAudit": {
+      "repositories": 40,
+      "failedOrCancelled": 0,
+      "active": 0
+    }
+  },
+  "nextAction": "Continue the active daily terminal-only repair review; use the repository-level CI results to investigate only future verified failures."
+}

@@ -64,3 +64,13 @@
 - [x] Refresh current original-repository workflows, account-authored branch relationships, and daily schedule state
 - [x] Repair and verify any newly actionable terminal-detectable workflow or application failures; none was exposed by the refreshed audit or application test suite
 - [x] Refresh safe-rebase evidence and the sanitized GitHub repair handoff bundle
+
+- [ ] Continue the active daily terminal-only GitHub workflow audit and safe-repair review; investigate only newly actionable non-Dependabot failures
+- [ ] Keep the deployed authenticated Gmail-status UI check deferred unless the user explicitly authorizes a read-only browser session
+- [x] Audit legitimately accessible historical engineering assets, repository state, scripts, and current automation without exposing or copying secrets
+- [x] Create a machine-readable inventory and persistent execution-state record for reusable maintenance work
+- [x] Select and implement a sustainable long-running maintenance schedule that respects platform limits and preserves the current daily review
+- [x] Validate the chosen maintenance workflow and repair only newly actionable verified failures
+
+- [x] Preserve the selected daily terminal-only repair review plus repository-level CI-on-change maintenance model without adding a broad account-wide secret
+- [x] Validate current CI coverage and maintenance-state consistency, then repair only newly verified failures
