@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "mission": "github-centered-engineering-maintenance",
   "requestedCycleLimit": 2400,
-  "executionNumber": 4,
-  "lastVerifiedAt": "2026-08-20T23:55:00Z",
-  "status": "local_working_copy_safety_cycle_validated",
+  "executionNumber": 5,
+  "lastVerifiedAt": "2026-08-21T07:59:00Z",
+  "status": "workflow_audit_utility_restored_and_current_audit_clean",
   "safety": {
     "credentialPolicy": "Credential values are never recorded, copied, committed, or emitted.",
     "repositoryScope": "Only original user-owned repositories and account-authored branches are eligible for repair.",
@@ -25,6 +25,7 @@
   },
   "automationAssets": {
     "workflowAuditScript": "/home/ubuntu/github_original_workflow_audit.mjs",
+    "workflowAuditRepositoryCopy": "/home/ubuntu/bulk-resume-sender/github_original_workflow_audit.mjs",
     "branchAuditScript": "/home/ubuntu/bulk-resume-sender/github_original_branch_audit.mjs",
     "repairRecord": "/home/ubuntu/github-repair-progress.md",
     "currentWorkflowAudit": "/home/ubuntu/github-original-workflow-audit-current.json",
@@ -38,10 +39,12 @@
     }
   },
   "repositoryState": {
-    "accessibleOriginalRepositories": 40,
+    "accessibleOriginalRepositories": 42,
     "latestNonDependabotAudit": {
       "failedOrCancelled": 0,
-      "active": 0
+      "active": 0,
+      "policyExcludedBotAuthoredRuns": 2,
+      "staleHistoricalRuns": 1
     },
     "localWorkingCopies": [
       "bulk-resume-sender",
@@ -70,7 +73,7 @@
     "rationale": "The model preserves the validated daily account-level review and avoids unsupported high-frequency agent polling while keeping code changes covered by repository CI."
   },
   "recentExecution": {
-    "outcome": "Validated a new divergent user-authored branch, repaired its account-safety audit logic, and preserved the selected maintenance model without adding credentials.",
+    "outcome": "Restored a lost account-wide workflow-audit utility, preserved a repository copy, waited for the only active user-authored maintenance run to succeed, and confirmed no current approved-scope workflow failure or active run.",
     "repairs": [
       {
         "repository": "automation-control-center",
@@ -93,26 +96,30 @@
       }
     ],
     "workflowAudit": {
-      "repositories": 40,
+      "repositories": 42,
       "failedOrCancelled": 0,
-      "active": 0
+      "active": 0,
+      "policyExcludedBotAuthoredRuns": 2,
+      "staleHistoricalRuns": 1
     }
   },
   "lastMaintenanceCycle": {
-    "scope": "terminal-only local-working-copy safety and workflow health",
-    "localWorkingCopiesInspected": 20,
+    "scope": "terminal-only restored workflow-audit validation and current workflow health",
+    "workflowAuditUtility": "Recreated after workspace recovery, fixed Dependabot and bot-authored classification, excludes deleted historical workflow definitions, and is preserved in the project repository.",
     "resolved": [
       {
-        "repository": "infra-tools",
-        "change": "Added a minimal Python bytecode ignore rule, rebased the local housekeeping commit onto the reviewed upstream dependency declaration, and pushed the resulting fast-forward main update.",
-        "commit": "626adc4",
-        "validation": "python3 -m py_compile download_ubuntu.py and git diff --check"
+        "repository": "autonomous-engineering-maintenance",
+        "change": "Observed the active scheduled maintenance workflow without changing its configuration; it completed successfully before the closing audit.",
+        "validationRun": "32460875705",
+        "result": "success"
       }
     ],
     "workflowAudit": {
-      "repositories": 40,
+      "repositories": 42,
       "failedOrCancelled": 0,
-      "active": 0
+      "active": 0,
+      "policyExcludedBotAuthoredRuns": 2,
+      "staleHistoricalRuns": 1
     }
   },
   "connectorVerification": {
@@ -123,5 +130,5 @@
       "nextAction": "Renew the API credential through the authenticated Perplexity API-settings path, then rerun the minimal health request."
     }
   },
-  "nextAction": "Continue the active daily terminal-only repair review; use the repository-level CI results and safe branch audit to investigate only future verified failures or eligible divergences."
+  "nextAction": "Continue the active daily terminal-only repair review; use the restored repository workflow audit and branch audit to investigate only future current, approved-scope failures or eligible user-authored divergences."
 }
