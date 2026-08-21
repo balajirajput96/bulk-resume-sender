@@ -66,6 +66,7 @@
 - [x] Refresh safe-rebase evidence and the sanitized GitHub repair handoff bundle
 
 - [ ] Continue the active daily terminal-only GitHub workflow audit and safe-repair review; investigate only newly actionable non-Dependabot failures
+- [x] Diagnose, minimally repair, and verify the failed Pharma QA Job Tracker maintenance and application workflows
 - [ ] Keep the deployed authenticated Gmail-status UI check deferred unless the user explicitly authorizes a read-only browser session
 - [x] Audit legitimately accessible historical engineering assets, repository state, scripts, and current automation without exposing or copying secrets
 - [x] Create a machine-readable inventory and persistent execution-state record for reusable maintenance work
