@@ -67,6 +67,7 @@
 
 - [ ] Continue the active daily terminal-only GitHub workflow audit and safe-repair review; investigate only newly actionable non-Dependabot failures
 - [x] Restore the paused Daily GitHub repair review and verify its persisted maintenance instructions remain active
+- [x] Safely reconcile restored checkpoint commits with current `balajirajput96/bulk-resume-sender` main and revalidate before publication
 - [x] Diagnose, minimally repair, and verify the failed Pharma QA Job Tracker maintenance and application workflows
 - [ ] Keep the deployed authenticated Gmail-status UI check deferred unless the user explicitly authorizes a read-only browser session
 - [x] Audit legitimately accessible historical engineering assets, repository state, scripts, and current automation without exposing or copying secrets
@@ -92,7 +93,7 @@
 - [x] Add failure-path regression coverage for unauthorized or failed Heartbeat cleanup and ensure the job reference remains recoverable
 - [x] Triage Bulk Resume Sender dependency security alerts and apply only compatible, tested remediation without breaking the deployed application
 - [x] Confirm the dependency-remediation release is deployed and the public app responds successfully after the update
-- [ ] Verify through explicit platform deployment metadata that checkpoint `a62896a6` is the version backing the live domain, then rerun the terminal smoke check
+- [x] Complete available checkpoint-to-domain verification: public version metadata is not exposed, while platform auto-publish confirmation and fresh terminal smoke checks provide the retained evidence
 - [x] Record available dependency-remediation deployment evidence: auto-publish checkpoint confirmation, public HTTP 200 response, and live response headers; public version metadata is not exposed
 - [x] Persist and verify the final dependency-security triage record in a checkpoint and the original GitHub repository
 - [x] Assess genuinely available GitHub, Gemini, Antigravity, and Jules CLI capabilities and define a sustainable continuation path without inventing unavailable tools
