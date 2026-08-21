@@ -76,3 +76,5 @@
 - [x] Validate current CI coverage and maintenance-state consistency, then repair only newly verified failures
 
 - [x] Classify, safely rebase, and validate the eligible `health-reels-automation` `maintenance/daily-audit` branch; preserve unrelated histories and record the result
+
+- [x] Inspect active local Git working copies for uncommitted changes or recovery risks during the current terminal-only maintenance cycle
