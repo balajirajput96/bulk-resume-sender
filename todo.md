@@ -78,3 +78,14 @@
 - [x] Classify, safely rebase, and validate the eligible `health-reels-automation` `maintenance/daily-audit` branch; preserve unrelated histories and record the result
 
 - [x] Inspect active local Git working copies for uncommitted changes or recovery risks during the current terminal-only maintenance cycle
+
+- [ ] Inspect and, if needed, complete the user-requested Perplexity authentication through supported secure mechanisms; verify availability without exposing credentials
+- [x] Open Perplexity in the browser, complete user-approved account sign-in if required, and distinguish web-account access from API-key validity
+- [ ] Renew or replace the invalid Perplexity API credential through the supported account/API-settings path, then re-run the non-secret availability check
+
+- [ ] Create a read-only inventory of accessible Perplexity projects/sessions and correlate verified app requirements with local and original GitHub code
+- [ ] Prioritize and safely improve one verified user-owned app, test it, publish it to the correct original GitHub repository, and record the result
+- [x] Cancel the Heartbeat job after a one-time scheduled campaign completes so annual cron recurrence cannot create unnecessary callbacks; add regression coverage
+- [x] Verify Heartbeat ownership and authorization semantics so a scheduled-campaign callback can clean up the job created for that user
+- [x] Add failure-path regression coverage for unauthorized or failed Heartbeat cleanup and ensure the job reference remains recoverable
+- [ ] Assess genuinely available GitHub, Gemini, Antigravity, and Jules CLI capabilities and define a sustainable continuation path without inventing unavailable tools

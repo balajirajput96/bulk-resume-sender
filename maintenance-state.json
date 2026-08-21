@@ -115,5 +115,13 @@
       "active": 0
     }
   },
+  "connectorVerification": {
+    "perplexity": {
+      "webAccountSession": "authenticated",
+      "apiCredential": "invalid_or_expired",
+      "evidence": "A minimal API health request returned HTTP 401 without exposing the credential.",
+      "nextAction": "Renew the API credential through the authenticated Perplexity API-settings path, then rerun the minimal health request."
+    }
+  },
   "nextAction": "Continue the active daily terminal-only repair review; use the repository-level CI results and safe branch audit to investigate only future verified failures or eligible divergences."
 }

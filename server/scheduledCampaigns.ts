@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { getDb } from "./db";
 import { campaigns } from "../drizzle/schema";
 import { sdk } from "./_core/sdk";
+import { deleteHeartbeatJob } from "./_core/heartbeat";
 import { executeCampaign } from "./emailService";
 
 /** Registers the platform-authenticated callback for scheduled campaigns. */
@@ -20,6 +21,14 @@ export function registerScheduledCampaignRoutes(app: Express): void {
       if (campaign.scheduledAt && campaign.scheduledAt.getTime() > Date.now()) return res.json({ ok: true, skipped: "early" });
 
       await executeCampaign(campaign.id);
+      try {
+        await deleteHeartbeatJob(user.taskUid, "");
+        await db.update(campaigns).set({ scheduleCronTaskUid: null }).where(eq(campaigns.id, campaign.id));
+      } catch (cleanupError) {
+        // Delivery already completed. Keep the reference for later investigation
+        // rather than converting a successful campaign into a failed callback.
+        console.error("[Scheduled Campaign] Unable to remove completed one-time job", cleanupError);
+      }
       return res.json({ ok: true, campaignId: campaign.id });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

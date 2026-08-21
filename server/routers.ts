@@ -1,4 +1,3 @@
-import { parse as parseCookie } from "cookie";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -116,9 +115,9 @@ export const appRouter = router({
       const campaignId = Number(result[0].insertId);
       await db.insert(campaignRecipients).values(recipients.map(email => ({ campaignId, email, status: "pending" as const })));
       if (status === "scheduled" && scheduledDate) {
-        const sessionToken = parseCookie(ctx.req.headers.cookie ?? "")[COOKIE_NAME] ?? "";
-        if (!sessionToken) throw new TRPCError({ code: "UNAUTHORIZED", message: "Your session is required to schedule a campaign." });
-        const job = await createHeartbeatJob({ name: `campaign-${campaignId}`, cron: buildOneTimeCron(scheduledDate), path: "/api/scheduled/send-campaign", payload: { campaignId }, description: `One-time email campaign ${campaignId}` }, sessionToken);
+        // Campaign scheduling is admin-only. Use the project-owner Heartbeat
+        // identity so the cron callback can later delete the one-time job.
+        const job = await createHeartbeatJob({ name: `campaign-${campaignId}`, cron: buildOneTimeCron(scheduledDate), path: "/api/scheduled/send-campaign", payload: { campaignId }, description: `One-time email campaign ${campaignId}` }, "");
         await db.update(campaigns).set({ scheduleCronTaskUid: job.taskUid }).where(eq(campaigns.id, campaignId));
         return { success: true, campaignId, status, nextExecutionAt: job.nextExecutionAt ?? null };
       }
