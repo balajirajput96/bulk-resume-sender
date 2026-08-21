@@ -79,12 +79,12 @@
 
 - [x] Inspect active local Git working copies for uncommitted changes or recovery risks during the current terminal-only maintenance cycle
 
-- [ ] Inspect and, if needed, complete the user-requested Perplexity authentication through supported secure mechanisms; verify availability without exposing credentials
+- [x] Supersede Perplexity API authentication work after the user redirected the task to Perplexity project inventory and app improvement; browser account sign-in was completed but no API credential was changed
 - [x] Open Perplexity in the browser, complete user-approved account sign-in if required, and distinguish web-account access from API-key validity
-- [ ] Renew or replace the invalid Perplexity API credential through the supported account/API-settings path, then re-run the non-secret availability check
+- [x] Supersede Perplexity API credential renewal after the user redirected the task to project and application analysis; no credential was exposed, created, or changed
 
-- [ ] Create a read-only inventory of accessible Perplexity projects/sessions and correlate verified app requirements with local and original GitHub code
-- [ ] Prioritize and safely improve one verified user-owned app, test it, publish it to the correct original GitHub repository, and record the result
+- [x] Create a read-only inventory of accessible Perplexity projects/sessions and correlate verified app requirements with local and original GitHub code
+- [x] Prioritize and safely improve one verified user-owned app, test it, publish it to the correct original GitHub repository, and record the result
 - [x] Cancel the Heartbeat job after a one-time scheduled campaign completes so annual cron recurrence cannot create unnecessary callbacks; add regression coverage
 - [x] Verify Heartbeat ownership and authorization semantics so a scheduled-campaign callback can clean up the job created for that user
 - [x] Add failure-path regression coverage for unauthorized or failed Heartbeat cleanup and ensure the job reference remains recoverable
@@ -92,5 +92,5 @@
 - [x] Confirm the dependency-remediation release is deployed and the public app responds successfully after the update
 - [ ] Verify through explicit platform deployment metadata that checkpoint `a62896a6` is the version backing the live domain, then rerun the terminal smoke check
 - [x] Record available dependency-remediation deployment evidence: auto-publish checkpoint confirmation, public HTTP 200 response, and live response headers; public version metadata is not exposed
-- [ ] Persist and verify the final dependency-security triage record in a checkpoint and the original GitHub repository
-- [ ] Assess genuinely available GitHub, Gemini, Antigravity, and Jules CLI capabilities and define a sustainable continuation path without inventing unavailable tools
+- [x] Persist and verify the final dependency-security triage record in a checkpoint and the original GitHub repository
+- [x] Assess genuinely available GitHub, Gemini, Antigravity, and Jules CLI capabilities and define a sustainable continuation path without inventing unavailable tools
