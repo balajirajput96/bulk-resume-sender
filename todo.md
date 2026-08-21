@@ -88,4 +88,5 @@
 - [x] Cancel the Heartbeat job after a one-time scheduled campaign completes so annual cron recurrence cannot create unnecessary callbacks; add regression coverage
 - [x] Verify Heartbeat ownership and authorization semantics so a scheduled-campaign callback can clean up the job created for that user
 - [x] Add failure-path regression coverage for unauthorized or failed Heartbeat cleanup and ensure the job reference remains recoverable
+- [ ] Triage Bulk Resume Sender dependency security alerts and apply only compatible, tested remediation without breaking the deployed application
 - [ ] Assess genuinely available GitHub, Gemini, Antigravity, and Jules CLI capabilities and define a sustainable continuation path without inventing unavailable tools
